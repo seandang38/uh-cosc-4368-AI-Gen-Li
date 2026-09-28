@@ -2,8 +2,8 @@
 COSC 4368
 Homework 1: Regression from Scratch
 
-Name:
-CougarNet ID:
+Name: Sean Dang 
+CougarNet ID: 2518173
 
 Instructions:
 - Complete every TODO.
@@ -37,8 +37,7 @@ def linear_predict(x, w, b):
     np.ndarray
         Predictions w*x + b.
     """
-    # TODO
-    raise NotImplementedError
+    return w * x + b
 
 
 def mse_loss(y_true, y_pred):
@@ -50,8 +49,7 @@ def mse_loss(y_true, y_pred):
     float
         Mean squared error.
     """
-    # TODO
-    raise NotImplementedError
+    return float(np.mean((y_true - y_pred) ** 2))
 
 
 def linear_gradients(x, y, w, b):
@@ -63,9 +61,13 @@ def linear_gradients(x, y, w, b):
     dw : float
     db : float
     """
-    # TODO
-    raise NotImplementedError
+    n = len(x)
+    y_hat = linear_predict(x, w, b)
+    diff = y_hat - y
+    dw = (2 / n) * np.sum(diff * x)
+    db = (2 / n) * np.sum(diff)
 
+    return float(dw), float(db)
 
 def train_linear_regression(x, y, learning_rate, epochs):
     """
@@ -81,7 +83,10 @@ def train_linear_regression(x, y, learning_rate, epochs):
     w = 0.0
     b = 0.0
 
-    # TODO
+    for _ in range(epochs):
+        dw, db = linear_gradients(x, y, w, b)
+        w = w - learning_rate * dw
+        b = b - learning_rate * db
 
     return w, b
 
@@ -96,16 +101,14 @@ def sigmoid(z):
 
     Must work for both a scalar and a NumPy array.
     """
-    # TODO
-    raise NotImplementedError
+    return 1.0 / (1.0 + np.exp(-z))
 
 
 def logistic_predict_proba(x, w, b):
     """
     Return P(y=1 | x) for each input.
     """
-    # TODO
-    raise NotImplementedError
+    return sigmoid(w * x + b)
 
 
 def logistic_predict(x, w, b, threshold=0.5):
@@ -119,8 +122,9 @@ def logistic_predict(x, w, b, threshold=0.5):
     np.ndarray
         Integer array containing 0 and 1.
     """
-    # TODO
-    raise NotImplementedError
+
+    probs = logistic_predict_proba(x, w, b)
+    return (probs >= threshold).astype(int)
 
 
 def binary_cross_entropy(y_true, y_prob):
@@ -130,8 +134,11 @@ def binary_cross_entropy(y_true, y_prob):
     Hint:
         Clip y_prob to [1e-12, 1 - 1e-12] before taking logs.
     """
-    # TODO
-    raise NotImplementedError
+    eps = 1e-12
+    y_prob = np.clip(y_prob, eps, 1.0 - eps)
+    bce_loss = -np.mean(y_true * np.log(y_prob) + (1.0 - y_true) * np.log(1.0 - y_prob))
+
+    return float(bce_loss)
 
 
 def logistic_gradients(x, y, w, b):
@@ -143,8 +150,13 @@ def logistic_gradients(x, y, w, b):
     dw : float
     db : float
     """
-    # TODO
-    raise NotImplementedError
+    n = len(x)
+    p = logistic_predict_proba(x, w, b)
+    diff = p - y
+    dw = (1.0 / n) * np.sum(diff * x)
+    db = (1.0 / n) * np.sum(diff)
+
+    return float(dw), float(db)
 
 
 def train_logistic_regression(x, y, learning_rate, epochs):
@@ -161,7 +173,10 @@ def train_logistic_regression(x, y, learning_rate, epochs):
     w = 0.0
     b = 0.0
 
-    # TODO
+    for _ in range(epochs):
+        dw, db = logistic_gradients(x, y, w, b)
+        w = w - learning_rate * dw
+        b = b - learning_rate * db
 
     return w, b
 
@@ -175,8 +190,7 @@ def accuracy(y_true, y_pred):
     float
         Value between 0.0 and 1.0.
     """
-    # TODO
-    raise NotImplementedError
+    return float(np.mean(y_true == y_pred))
 
 
 # ============================================================
@@ -184,8 +198,8 @@ def accuracy(y_true, y_pred):
 # ============================================================
 
 # Replace each empty string with A, B, C, or D.
-answer_q1 = ""
-answer_q2 = ""
+answer_q1 = "B"
+answer_q2 = "B"
 
 
 # ============================================================
